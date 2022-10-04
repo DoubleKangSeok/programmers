@@ -28,14 +28,24 @@ import java.util.List;
 public class Solution {
     public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
         // paths에서 각 지점별 인덱스 저장.
-        HashMap<Integer, List<Integer>> pathsInfo = new HashMap<>();
+        HashMap<Integer, List<int[]>> pathsInfo = new HashMap<>();
         
         // 각 지점별 index 정보 저장
         for (Integer i = 1; i <= n; i++) {
             for (int j =0; j < paths.length; j++){
-                List<Integer> pathsIndex = pathsInfo.get(i)== null ? new ArrayList<>() : pathsInfo.get(i);
+                List<int[]> pathsIndex = pathsInfo.get(i)== null ? new ArrayList<>() : pathsInfo.get(i);
                 if (i==paths[j][0]) {
-                    pathsIndex.add(j);
+                    int[] nextSpotInfo = new int[2];
+                    nextSpotInfo[0] = paths[j][1];
+                    nextSpotInfo[1] = paths[j][2];
+                    pathsIndex.add(nextSpotInfo);
+                    System.out.printf("nextSpotInfo: %s - %s\n",i , Arrays.toString(nextSpotInfo));
+                }else if (i==paths[j][1]) {
+                    int[] nextSpotInfo = new int[2];
+                    nextSpotInfo[0] = paths[j][0];
+                    nextSpotInfo[1] = paths[j][2];
+                    pathsIndex.add(nextSpotInfo);
+                    System.out.printf("nextSpotInfo: %s - %s\n",i , Arrays.toString(nextSpotInfo));
                 }
                 pathsInfo.put(i,pathsIndex);
             }
@@ -43,68 +53,68 @@ public class Solution {
         System.out.printf("pathsInfo: %s\n", pathsInfo.toString());
         // gates 별 루트를 구해야한다.
 
-        int[] answer = {0,0};
-        for (int gate : gates) {
-            // 각 gate별 summit과 intensity를 담을 변수
-            int[] courseInfo = getAnswer(answer, gate, paths, summits, pathsInfo);
-
-            System.out.printf("111answer info: %d\n", answer[0]);
-            System.out.printf("111answer info: %d\n", answer[1]);
-
-            answer[0] = courseInfo[0];
-            answer[1] = courseInfo[1];
-
-            if (gates.length > 1) {
-                // 1. 각 게이트별 intensity 크기 비교 작은 것을 answer에 담는다.
-                answer[0] = answer[1] < courseInfo[1]
-                        ? answer[0]
-                        : answer[1] == courseInfo[1] && answer[0] > courseInfo[0]
-                            ? courseInfo[0]
-                            : answer[0];
-
-                answer[1] = answer[1] < courseInfo[1]
-                        ? answer[1]
-                        : answer[1] == courseInfo[1] && answer[0] > courseInfo[0]
-                        ? courseInfo[1]
-                        : answer[1];
-            }
-
-            // 2. 같을 경우에는 정상 번호가 작은 것.
-
-        }
-
-
-        return answer;
+//        int[] answer = {0,0};
+//        for (int gate : gates) {
+//            // 각 gate별 summit과 intensity를 담을 변수
+//            int[] courseInfo = getAnswer(answer, gate, paths, summits, pathsInfo);
+//
+//            System.out.printf("111answer info: %d\n", answer[0]);
+//            System.out.printf("111answer info: %d\n", answer[1]);
+//
+//            answer[0] = courseInfo[0];
+//            answer[1] = courseInfo[1];
+//
+//            if (gates.length > 1) {
+//                // 1. 각 게이트별 intensity 크기 비교 작은 것을 answer에 담는다.
+//                answer[0] = answer[1] < courseInfo[1]
+//                        ? answer[0]
+//                        : answer[1] == courseInfo[1] && answer[0] > courseInfo[0]
+//                            ? courseInfo[0]
+//                            : answer[0];
+//
+//                answer[1] = answer[1] < courseInfo[1]
+//                        ? answer[1]
+//                        : answer[1] == courseInfo[1] && answer[0] > courseInfo[0]
+//                        ? courseInfo[1]
+//                        : answer[1];
+//            }
+//
+//            // 2. 같을 경우에는 정상 번호가 작은 것.
+//
+//        }
+//
+//
+        return null;
     }
-
-    private int[] getAnswer(int[] answer, int gate, int[][] paths, int[] summits, HashMap<Integer, List<Integer>> pathsInfo) {
-        // 해당 gate에 대한 최소 intensity를 담은 배열을 초기화.
-        System.out.printf("[------------------- this gate: {%d} -------------------]\n", gate);
-        // 이 gate에 연결된 spot들이 있다. 이는 위에서 pathsInfo에서 미리 index번호를 List에 저장해두었다.
-        for(Integer index : pathsInfo.get(gate)) {
-            // 여러 지점별 answer가 다 다를것인데 하나의 answer에 덮어 씌우는게 맞나?
-            System.out.printf("index: %d\n", index);
-            for(int summit : summits) {
-                System.out.printf("[has path {%d} -> {%d}]\n", gate, paths[index][1]);
-                if (summit == paths[index][1]){
-                    // gate부터 하나의 목적지까지 answer완료.
-                    answer[0] = summit;
-                    System.out.printf("[------------------------ goal ------------------------]\n");
-                    System.out.printf("result: %s\n", Arrays.toString(answer));
-                    System.out.printf("\n");
-                    System.out.printf("\n");
-                }
-            }
-            answer[1] = paths[index][2] > answer[1] ? paths[index][2] : answer[1];
-            System.out.printf("spot info per index - intensity : {%d} %d\n", index, paths[index][2]);
-
-            System.out.printf("bigger - intensity : %d\n", answer[1]);
-            getAnswer(answer, paths[index][1],paths,summits,pathsInfo);
-
-
-        }
-        return answer;
-    }
+//
+//    private int[] getAnswer(int[] answer, int gate, int[][] paths, int[] summits, HashMap<Integer, List<Integer>> pathsInfo) {
+//        // 해당 gate에 대한 최소 intensity를 담은 배열을 초기화.
+//        System.out.printf("[------------------- this gate: {%d} -------------------]\n", gate);
+//        // 이 gate에 연결된 spot들이 있다. 이는 위에서 pathsInfo에서 미리 index번호를 List에 저장해두었다.
+//        for(Integer index : pathsInfo.get(gate)) {
+//            // 여러 지점별 answer가 다 다를것인데 하나의 answer에 덮어 씌우는게 맞나?
+//            System.out.printf("index: %d\n", index);
+//            for(int summit : summits) {
+//                System.out.printf("[has path {%d} -> {%d}]\n", gate, paths[index][1]);
+//                if (summit == paths[index][1]){
+//                    // gate부터 하나의 목적지까지 answer완료.
+//                    answer[0] = summit;
+//                    System.out.printf("[------------------------ goal ------------------------]\n");
+//                    System.out.printf("result: %s\n", Arrays.toString(answer));
+//                    System.out.printf("\n");
+//                    System.out.printf("\n");
+//                }
+//            }
+//            answer[1] = paths[index][2] > answer[1] ? paths[index][2] : answer[1];
+//            System.out.printf("spot info per index - intensity : {%d} %d\n", index, paths[index][2]);
+//
+//            System.out.printf("bigger - intensity : %d\n", answer[1]);
+//            getAnswer(answer, paths[index][1],paths,summits,pathsInfo);
+//
+//
+//        }
+//        return answer;
+//    }
 
 }
 /*

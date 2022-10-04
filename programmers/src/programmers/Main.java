@@ -2,7 +2,7 @@ package programmers;
 
 
 import programmers.hikingCourse.Solution;
-import programmers.hikingCourse.Solution_old_3;
+import programmers.hikingCourse.Solution_old_4;
 
 import java.util.Arrays;
 
